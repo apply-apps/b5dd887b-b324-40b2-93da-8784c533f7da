@@ -1,53 +1,52 @@
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+// Filename: index.js
+// Combined code from all files
+import React, { useState } from 'react';
+import { SafeAreaView, StyleSheet, Text, Button, View, ScrollView } from 'react-native';
 
-const App = () => {
-  const fullText = 'Hi, this is Apply.\nCreating mobile apps is now as simple as typing text.\nJust input your idea and press APPLY, and our platform does the rest...';
-  const [displayedText, setDisplayedText] = useState('');
-  const [index, setIndex] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
+const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 
-  useEffect(() => {
-    if (isPaused) return;
+export default function App() {
+    const [currentIndex, setCurrentIndex] = useState(0);
 
-    const interval = setInterval(() => {
-      setDisplayedText((prev) => prev + fullText[index]);
-      setIndex((prev) => {
-        if (prev === fullText.length - 1) {
-          setIsPaused(true);
-          setTimeout(() => {
-            setDisplayedText('');
-            setIndex(0);
-            setIsPaused(false);
-          }, 2000);
-          return 0;
-        }
-        return prev + 1;
-      });
-    }, 100);
+    const nextLetter = () => {
+        setCurrentIndex((prevIndex) => (prevIndex + 1) % letters.length);
+    };
 
-    return () => clearInterval(interval);
-  }, [index, isPaused]);
-
-  return (
-    <View style={styles.container}>
-      <Text style={styles.text}>{displayedText}</Text>
-    </View>
-  );
-};
+    return (
+        <SafeAreaView style={styles.container}>
+            <ScrollView contentContainerStyle={styles.contentContainer}>
+                <View style={styles.letterBox}>
+                    <Text style={styles.letterText}>{letters[currentIndex]}</Text>
+                </View>
+                <Button title="Next Letter" onPress={nextLetter} />
+            </ScrollView>
+        </SafeAreaView>
+    );
+}
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    backgroundColor: 'black',
-    padding: 20,
-  },
-  text: {
-    color: 'white',
-    fontSize: 24,
-    fontFamily: 'monospace',
-  },
+    container: {
+        flex: 1,
+        marginTop: 20,
+        backgroundColor: '#f0f0f0',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    contentContainer: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexGrow: 1,
+    },
+    letterBox: {
+        backgroundColor: '#fff',
+        padding: 50,
+        borderRadius: 25,
+        marginBottom: 30,
+        alignItems: 'center',
+    },
+    letterText: {
+        fontSize: 100,
+        fontWeight: 'bold',
+        color: '#333',
+    },
 });
-
-export default App;
